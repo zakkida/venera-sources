@@ -4,5 +4,17 @@
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/ex_fangliding.js",
     "version": "1.2.0",
     "description": "ExHentai 镜像源 (ex.fangliding.eu.org)，基于官方 ehentai 源适配"
+  },
+  {
+    "name": "Mangabz",
+    "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/mangabz.js",
+    "version": "1.0.0",
+    "description": "繁体中文日漫大站，存量巨大"
+  },
+  {
+    "name": "MangaPill",
+    "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/mangapill.js",
+    "version": "1.0.0",
+    "description": "英文日漫站，CDN 加载快"
   }
 ]
