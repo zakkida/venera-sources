@@ -310,9 +310,11 @@ class ExFangliding extends ComicSource {
                 let stars = this.getStarsFromPosition(item.querySelector("div.gl5t > div > div.ir")?.attributes["style"] ?? "");
                 let link = item.querySelector("a")?.attributes["href"] ?? "";
                 let pages = Number(item.querySelectorAll("div.gl5t > div > div").find((element) => element.text.includes("page"))?.text.match(/\d+/)[0] ?? "0");
+                let uploader = item.querySelector("a[href*='/uploader/']")?.text ?? "";
                 galleries.push(new Comic({
                     id: link,
                     title: title,
+                    subTitle: uploader,
                     cover: coverPath,
                     description: time,
                     stars: stars,
@@ -772,12 +774,21 @@ class ExFangliding extends ComicSource {
             }
             let comments = this.comic.parseComments(document)
 
+            // ExHentai 画廊无简介字段；用主要标签生成描述，避免界面用源名占位
+            let descParts = []
+            for (let [ns, vals] of tags) {
+                if (ns === 'Category' || ns === 'uploader' || ns === 'language') continue
+                descParts.push(vals.join(', '))
+            }
+            let description = descParts.join(' | ').slice(0, 800)
+
             let comic = new ComicDetails({
                 id: id,
                 title: title,
                 subTitle: subtitle,
                 cover: coverPath,
                 tags: tags,
+                description: description,
                 stars: stars,
                 maxPage: Number(maxPage),
                 isFavorite: isFavorited,
@@ -950,82 +961,47 @@ class ExFangliding extends ComicSource {
          */
         onImageLoad: async (image, comicId, epId, nl) => {
             let first = await this.comic.loadThumbnails(comicId)
-            let key = await this.comic.getKey(first.urls[0])
             let page = Number(image)
 
-            let getImageFromApi = async (nl) => {
-                if(key.mpvkey) {
-                    let res = await Network.post(this.apiUrl, {
-                        'Content-Type': 'application/json',
-                    }, {
-                        'gid': this.parseUrl(comicId).id,
-                        "imgkey": key.imageKeys[page],
-                        "method": "imagedispatch",
-                        "page": Number(image) + 1,
-                        "mpvkey": key.mpvkey,
-                        "nl": nl,
-                    })
-                    let json = JSON.parse(res.body)
-                    return {
-                        url: json.i.toString(),
-                        nl: json.s.toString()
-                    }
-                } else {
-                    let parseImageKeyFromUrl = (url) => {
-                        return url.split("/")[4]
-                    }
-
-                    let url = ''
-                    if(page < first.thumbnails.length) {
-                        url = first.urls[page]
-                    } else {
-                        let onePageLength = first.thumbnails.length
-                        let shouldLoadPage = Math.floor(page / onePageLength)
-                        let index = page % onePageLength
-                        let thumbnails =
-                            await this.comic.loadThumbnails(comicId, shouldLoadPage.toString())
-                        url = thumbnails.urls[index]
-                    }
-
-                    let res = await Network.post(this.apiUrl, {
-                        'Content-Type': 'application/json',
-                    }, {
-                        'gid': this.parseUrl(comicId).id,
-                        "imgkey": parseImageKeyFromUrl(url),
-                        "method": "showpage",
-                        "page": page + 1,
-                        "showkey": key.showkey,
-                        "nl": nl,
-                    })
-                    let json = JSON.parse(res.body)
-                    let i6 = json.i6
-                    let reg = RegExp("nl\\('(.+?)'\\)").exec(i6)
-                    nl = reg[1]
-                    let image = json.i3
-                    image = image.substring(image.indexOf("src=\"") + 5, image.indexOf("\" style"))
-                    return {
-                        url: image,
-                        nl: nl
-                    }
-                }
+            // resolve the /s/ page url for this image
+            let url = ''
+            if(page < first.thumbnails.length) {
+                url = first.urls[page]
+            } else {
+                let onePageLength = first.thumbnails.length
+                let shouldLoadPage = Math.floor(page / onePageLength)
+                let index = page % onePageLength
+                let thumbnails =
+                    await this.comic.loadThumbnails(comicId, shouldLoadPage.toString())
+                url = thumbnails.urls[index]
             }
 
-            let res = await getImageFromApi(nl)
-
-            let onLoadFailed = null
-
-            if(res.nl) {
-                onLoadFailed = async () => {
-                    return this.comic.onImageLoad(image, comicId, epId, res.nl)
-                }
+            // The mirror serves /s/ pages from a long Cloudflare cache, so the
+            // embedded showkey goes stale and api.php answers {"error":"Key mismatch"}.
+            // Bypass the API entirely: fetch the /s/ page directly (random param
+            // defeats the cache) and parse the image URL from <img id="img" src="...">.
+            let sep = url.includes('?') ? '&' : '?'
+            let res = await Network.get(url + sep + 't=' + Date.now(), {
+                'cache-time': 'no-cache',
+            })
+            if(res.status !== 200) {
+                throw `Invalid status code: ${res.status}`
             }
-
+            let document = new HtmlDocument(res.body)
+            let imgEl = document.querySelector('img#img')
+            let imgUrl = imgEl?.attributes['src'] ?? null
+            let nlMatch = RegExp("nl\\('(.+?)'\\)").exec(res.body)
+            let newNl = nlMatch ? nlMatch[1] : null
+            document.dispose()
+            if(imgUrl == null) {
+                throw 'Failed to parse image url from /s/ page'
+            }
             return {
-                url: res.url,
+                url: imgUrl,
                 headers: {
                     'referer': 'https://exhentai.org',
                 },
-                onLoadFailed: onLoadFailed,
+                onLoadFailed: newNl ? async () => this.comic.onImageLoad(image, comicId, epId, newNl) : null,
             }
         },
         /**
