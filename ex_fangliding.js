@@ -1417,7 +1417,7 @@ class ExFangliding extends ComicSource {
             "hvevent": "提示HV遭遇战",
             "hentaiverse": "你遇到了怪物！",
             "fight":"战斗",
-            "cancel":"取��",
+            "cancel":"取  ",
             "language": "语言",
             "artist": "画师",
             "male": "男性",
