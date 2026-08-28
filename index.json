@@ -2,19 +2,29 @@
   {
     "name": "ExHentai (fangliding 镜像)",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/ex_fangliding.js",
+    "key": "ex_fangliding",
     "version": "1.2.0",
     "description": "ExHentai 镜像源 (ex.fangliding.eu.org)，基于官方 ehentai 源适配"
   },
   {
+    "name": "無限動漫",
+    "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/8comic.js",
+    "key": "8comic",
+    "version": "1.0.0",
+    "description": "繁体中文日漫为主大站，存量巨大，免费无需登录"
+  },
+  {
     "name": "Mangabz",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/mangabz.js",
+    "key": "mangabz",
     "version": "1.0.0",
-    "description": "繁体中文日漫大站，存量巨大"
+    "description": "繁体中文日漫大站，数万部存量，需代理访问"
   },
   {
     "name": "MangaPill",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/mangapill.js",
+    "key": "mangapill",
     "version": "1.0.0",
-    "description": "英文日漫站，CDN 加载快"
+    "description": "英文日漫站，CDN 加载快，作备用"
   }
 ]
