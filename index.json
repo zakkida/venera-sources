@@ -4,35 +4,35 @@
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/ex_fangliding.js",
     "key": "ex_fangliding",
     "version": "1.2.0",
-    "description": "ExHentai 镜像源 (ex.fangliding.eu.org)"
+    "description": "ExHentai 镜像源 (ex.fangliding.eu.org)，基于官方 ehentai 源适配"
   },
   {
     "name": "無限動漫",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/8comic.js",
     "key": "8comic",
     "version": "1.0.0",
-    "description": "繁体中文日漫大站，免费无需登录"
+    "description": "繁体中文日漫为主大站，存量巨大，免费无需登录"
   },
   {
     "name": "Mangabz",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/mangabz.js",
     "key": "mangabz",
     "version": "1.0.0",
-    "description": "繁体中文日漫大站，需代理访问"
+    "description": "繁体中文日漫大站，数万部存量，需代理访问"
   },
   {
     "name": "MangaPill",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/mangapill.js",
     "key": "mangapill",
     "version": "1.0.0",
-    "description": "英文日漫站，作备用"
+    "description": "英文日漫站，CDN 加载快，作备用"
   },
   {
     "name": "拷贝漫画",
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/copy_manga.js",
     "key": "copy_manga",
     "version": "1.4.2",
-    "description": "修复分类/详情接口错误路径崩溃"
+    "description": "修复分类/详情接口错误路径崩溃 (res→results[0])"
   },
   {
     "name": "拷贝漫画(多账号)",
@@ -46,7 +46,7 @@
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/komiic.js",
     "key": "Komiic",
     "version": "1.1.0",
-    "description": "已换 komiic.cc 域名+封面代理；需登录 komiic.cc，大陆需代理"
+    "description": "已换 komiic.cc 域名+封面代理；需注册并登录 komiic.cc 账号，中国大陆需代理"
   },
   {
     "name": "hitomi.la",
@@ -60,7 +60,7 @@
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/ykmh.js",
     "key": "ykmh",
     "version": "1.0.1",
-    "description": "补浏览器化请求头，降低 Cloudflare 挑战与图片403"
+    "description": "补浏览器化请求头(UA/Referer)，降低 Cloudflare 挑战与图片403"
   },
   {
     "name": "漫蛙吧",
@@ -74,7 +74,7 @@
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/comic_walker.js",
     "key": "comic_walker",
     "version": "1.0.1",
-    "description": "修复 token 服务故障导致源初始化崩溃"
+    "description": "修复 token 服务临时故障导致源初始化崩溃"
   },
   {
     "name": "漫画1234",
@@ -88,6 +88,6 @@
     "url": "https://cdn.jsdelivr.net/gh/zakkida/venera-sources@main/ccc.js",
     "key": "ccc",
     "version": "1.0.2",
-    "description": "修复匿名请求 uuid:null 被 API 拒绝"
+    "description": "修复匿名请求 uuid:null 被 API 拒绝 (403 uuid錯誤)"
   }
 ]
